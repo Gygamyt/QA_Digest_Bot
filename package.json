@@ -1,0 +1,25 @@
+{
+  "name": "digest-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@langchain/community": "^1.1.27",
+    "@langchain/core": "^1.1.41",
+    "@langchain/google-genai": "^2.1.28",
+    "@langchain/google-vertexai": "^2.1.28",
+    "@langchain/langgraph": "^1.2.9",
+    "@langchain/tavily": "^1.2.0",
+    "duck-duck-scrape": "^2.2.7"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "dotenv": "^17.4.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "private": true
+}
