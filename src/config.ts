@@ -1,5 +1,8 @@
 import 'dotenv/config';
 import { z } from 'zod';
+import { configDotenv } from "dotenv";
+
+// configDotenv();
 
 const envSchema = z.object({
     GOOGLE_CREDENTIALS_JSON: z.string().optional(),

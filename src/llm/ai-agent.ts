@@ -7,6 +7,7 @@ const authOptions = ENV.GOOGLE_CREDENTIALS_JSON
 
 if (authOptions) {
     console.log("🔐 Инициализация Vertex AI: используется сервисный аккаунт (CI/CD)");
+    delete process.env.GOOGLE_API_KEY;
 } else {
     console.log("🔐 Инициализация Vertex AI: используется локальная авторизация (ADC)");
 }
@@ -14,5 +15,6 @@ if (authOptions) {
 export const llm = new ChatVertexAI({
     model: "gemini-2.5-flash",
     temperature: 1.5,
+    apiKey: undefined,
     ...(authOptions && { authOptions })
 });
