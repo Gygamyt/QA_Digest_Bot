@@ -1,5 +1,6 @@
 import { TavilySearch } from "@langchain/tavily";
 import { GraphState } from "../../types/state";
+import { ENV } from "../../config";
 
 export async function fetchNewsNode(state: typeof GraphState.State) {
     console.log(`🔍 Начинаем сбор данных (Всего категорий: ${state.queries.length})...`);
@@ -12,6 +13,7 @@ export async function fetchNewsNode(state: typeof GraphState.State) {
         const isNews = q.category !== "💼 Job Market & Interviews";
 
         const tool = new TavilySearch({
+            tavilyApiKey: ENV.TAVILY_API_KEY,
             maxResults: 5,
             timeRange: "week",
             topic: isNews ? "news" : "general",

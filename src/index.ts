@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import { workflow } from "./graph/workflow";
+import { ENV } from "./config";
 
 const SCHEDULE = {
     monday: [
@@ -20,7 +21,7 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 async function main() {
     try {
-        const isDebug = process.env.DEBUG_MODE === "true";
+        const isDebug = ENV.DEBUG_MODE;
         const dayOfWeek = new Date().getDay();
 
         let runs: { topic: string; queries: any[] }[] = [];
