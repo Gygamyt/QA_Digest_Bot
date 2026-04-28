@@ -1,7 +1,8 @@
-export function buildDigestCard(topic: string, digestText: string, sources: {title: string, url: string}[]) {
-    const sourcesHtml = sources
-        .map(s => `• <a href="${s.url}">${s.title}</a>`)
-        .join("<br>");
+export function buildDigestCard(topic: string, digestText: string, isDebug: boolean) {
+
+    const headerTitle = isDebug
+        ? "🛠 [DEBUG MODE] QA Дайджест"
+        : "Ежедневный QA Дайджест";
 
     return {
         cardsV2: [
@@ -9,7 +10,7 @@ export function buildDigestCard(topic: string, digestText: string, sources: {tit
                 cardId: "dailyDigestCard",
                 card: {
                     header: {
-                        title: "Ежедневный QA Дайджест",
+                        title: headerTitle,
                         subtitle: topic,
                         imageUrl: "https://cdn-icons-png.flaticon.com/512/8637/8637099.png",
                         imageType: "CIRCLE"
@@ -24,27 +25,6 @@ export function buildDigestCard(topic: string, digestText: string, sources: {tit
                                 }
                             ]
                         },
-                        {
-                            header: "<b>🔗 Источники:</b>",
-                            widgets: [
-                                {
-                                    textParagraph: {
-                                        text: sourcesHtml || "<i>Источники не найдены</i>"
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            widgets: [
-                                { divider: {} },
-                                {
-                                    decoratedText: {
-                                        text: "<font color='#808080'>Сгенерировано AI-агентом</font>",
-                                        startIcon: { knownIcon: "SMARTPHONE" }
-                                    }
-                                }
-                            ]
-                        }
                     ]
                 }
             }

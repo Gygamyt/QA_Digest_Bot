@@ -7,7 +7,7 @@ export async function sendToGoogleChatNode(state: typeof GraphState.State) {
 
     console.log("🚀 Отправляем UI-карточку со ссылками в Google Space...");
 
-    const body = buildDigestCard(state.topic, state.digest, state.sources);
+    const body = buildDigestCard(state.topic, state.digest, state.isDebug)
 
     const response = await fetch(webhookUrl, {
         method: "POST",

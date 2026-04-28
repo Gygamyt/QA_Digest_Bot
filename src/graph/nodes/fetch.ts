@@ -2,34 +2,53 @@ import { TavilySearch } from "@langchain/tavily";
 import { GraphState } from "../../types/state";
 
 export async function fetchNewsNode(state: typeof GraphState.State) {
-    console.log(`🔍 Ищем новости по теме: "${state.topic}" через Tavily...`);
+    console.log(`🔍 Начинаем сбор данных (Всего категорий: ${state.queries.length})...`);
 
-    const searchTool = new TavilySearch({
-        maxResults: 5,
-        topic: "news",
-        timeRange: "week",
-    });
+    const categorizedNews = [];
 
-    const searchResult = await searchTool.invoke({ query: state.topic });
+    for (const q of state.queries) {
+        console.log(`   -> Ищем: ${q.category}...`);
 
-    const parsedResult = typeof searchResult === 'string'
-        ? JSON.parse(searchResult)
-        : searchResult;
+        const isNews = q.category !== "💼 Job Market & Interviews";
 
-    const resultsArray = Array.isArray(parsedResult)
-        ? parsedResult
-        : (parsedResult?.results || []);
+        const tool = new TavilySearch({
+            maxResults: 5,
+            timeRange: "week",
+            topic: isNews ? "news" : "general",
+            includeDomains: [
+                "https://www.ministryoftesting.com/feed/",
+                "https://testautomationu.applitools.com",
+                "https://www.softwaretestinghelp.com/top-tutorials-and-tools/",
+                "https://www.guru99.com/feed",
+                "https://openai.com/news/",
+                "https://research.google/blog/",
+                "https://venturebeat.com/category/ai",
+                "https://www.deeplearning.ai/the-batch/",
+                "https://www.infoq.com/",
+                "https://hnrss.github.io/#firehose-feeds",
+                "https://github.com/trending",
+                "https://www.reddit.com/r/QualityAssurance ",
+                "https://www.reddit.com/r/cscareerquestions ",
+                "https://www.reddit.com/r/ExperiencedDevs",
+                "https://stackoverflow.blog/",
+                "https://www.thoughtworks.com/radar",
+            ],
+        });
 
-    // Извлекаем ссылки уже из массива
-    const sources = resultsArray.map((res: any) => ({
-        title: res.title || "Читать источник",
-        url: res.url
-    })).filter((s: any) => s.url); // Убираем пустые
+        try {
+            const searchResult = await tool.invoke({ query: q.query });
+            const parsedResult = typeof searchResult === 'string' ? JSON.parse(searchResult) : searchResult;
+            const resultsArray = Array.isArray(parsedResult) ? parsedResult : (parsedResult?.results || []);
 
-    // Отдаем модели только сами статьи, чтобы не тратить токены на мету
-    const rawNews = JSON.stringify(resultsArray);
+            categorizedNews.push({
+                category: q.category,
+                rawNews: JSON.stringify(resultsArray)
+            });
+        } catch (e) {
+            console.error(`   ❌ Ошибка поиска для ${ q.category }:`, e);
+        }
+    }
 
-    console.log(`✅ Найдено ${sources.length} источников, передаем в Gemini...`);
-
-    return { rawNews, sources };
+    console.log("✅ Все данные собраны, передаем в Gemini...");
+    return { categorizedNews };
 }
