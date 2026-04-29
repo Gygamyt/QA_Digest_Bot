@@ -2,7 +2,7 @@ export function buildDigestCard(topic: string, digestText: string, isDebug: bool
 
     const headerTitle = isDebug
         ? "🛠 [DEBUG MODE] QA Дайджест"
-        : "Ежедневный QA Дайджест";
+        : "Еженедельный QA Дайджест";
 
     return {
         cardsV2: [
